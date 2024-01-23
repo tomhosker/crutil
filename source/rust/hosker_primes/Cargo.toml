@@ -1,0 +1,12 @@
+[package]
+name = "hosker_primes"
+version = "1.0.0"
+authors = ["Tom Hosker"]
+edition = "2021"
+
+[lib]
+name = "hosker_primes"
+crate-type = ["dylib"]
+
+[dependencies]
+primes = "0.3.0"

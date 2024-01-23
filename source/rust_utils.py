@@ -12,8 +12,7 @@ from pathlib import Path
 # Local constants.
 PATH_OBJ_TO_RUST_PACKAGES_DIR = Path(__file__).parent/"rust"
 MANIFEST_FILENAME = "Cargo.toml"
-SO_FILENAME = "librust_lib.so"
-SILLY_WORD = "baboonery"
+LUCKY_INT = 17
 
 #############
 # FUNCTIONS #
@@ -50,7 +49,8 @@ def compile_rust_packages():
 def get_local_rust_library(package_name):
     """ Return a Rust library in a form which Python can use. """
     path_obj_to_package = PATH_OBJ_TO_RUST_PACKAGES_DIR/package_name
-    path_to_so_file = str(path_obj_to_package/"target"/"release"/SO_FILENAME)
+    so_filename = "lib"+package_name+".so"
+    path_to_so_file = str(path_obj_to_package/"target"/"release"/so_filename)
     try:
         result = CDLL(path_to_so_file)
     except:
@@ -65,7 +65,7 @@ def make_contact_template(library_name):
     """ Prove that you can access the library in question. """
     library = get_local_rust_library(library_name)
     try:
-        library.make_contact(SILLY_WORD.encode())
+        library.make_contact(LUCKY_INT)
     except:
         traceback.print_exc()
         return False
