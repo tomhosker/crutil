@@ -16,7 +16,7 @@ def make_contact():
     """ Prove that you can access this library. """
     return make_contact_template(LIB_NAME)
 
-def find_nth_prime(n):
+def find_nth_prime(n: int) -> int:
     """ Ronseal. """
     lib = get_local_rust_library(LIB_NAME)
     return lib.find_nth_prime(n)
