@@ -4,14 +4,12 @@
 use num_bigint::{BigInt, Sign};
 use primes;
 
+// Local constants.
+const MAX_DIGITS: usize = 100;
+
 /***************************
  ** FOR INTERNAL USE ONLY **
  **************************/
-
-#[repr(C)]
-pub struct List_4 {
-    array: *const [i32; 4]
-}
 
 /// Find the nth prime number.
 fn _find_nth_prime_i32(n: i32) -> i32 {
@@ -33,6 +31,12 @@ fn _find_nth_prime_i32(n: i32) -> i32 {
  ** FOR EXPORT **
  ***************/
 
+/// A portable representation of a large integer.
+#[repr(C)]
+pub struct PortableDigitList {
+    array: *const [u32; MAX_DIGITS]
+}
+
 /// Reassure an external user that they can indeed access this library.
 #[no_mangle]
 pub extern fn make_contact(int: i32) {
@@ -47,10 +51,11 @@ pub extern fn find_nth_prime_i32(n: i32) -> i32 {
 }
 
 #[no_mangle]
-pub extern fn print_big_int(list: List_4) {
-    unsafe { println!("{:?}", *list.array) };
+pub extern fn print_big_int(list: PortableDigitList) {
+    unsafe {
+        let digits = Vec::from(*list.array);
+        let big_integer = BigInt::new(Sign::Plus, digits);
 
-//    let big_integer = BigInt::new(Sign::Plus, digits);
-
-//    println!("What an ENORMOUS integer: {}", big_integer);
+        println!("What an ENORMOUS integer: {}", big_integer);
+    }
 }
