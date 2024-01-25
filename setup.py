@@ -13,7 +13,7 @@ GIT_URL_STEM = "https://github.com/tomhosker"
 AUTHOR = "Tom Hosker"
 AUTHOR_EMAIL = "tomdothosker@gmail.com"
 SCRIPT_PATHS = ("scripts/hosker-rutil-install-specials",)
-INSTALL_REQUIRES = ("hosker_utils",)
+INSTALL_REQUIRES = ("hosker_utils", "numpy")
 INCLUDE_PACKAGE_DATA = True
 
 ###################################

@@ -1,14 +1,20 @@
 /// This library defines some utility functions for working with primes.
 
 // Non-standard imports.
+use num_bigint::{BigInt, Sign};
 use primes;
 
 /***************************
  ** FOR INTERNAL USE ONLY **
  **************************/
 
+#[repr(C)]
+pub struct List_4 {
+    array: *const [i32; 4]
+}
+
 /// Find the nth prime number.
-fn _find_nth_prime(n: i32) -> i32 {
+fn _find_nth_prime_i32(n: i32) -> i32 {
     let mut count = 0;
     let mut current = 0;
 
@@ -36,6 +42,15 @@ pub extern fn make_contact(int: i32) {
 
 /// A wrapper for the similarly-named function above.
 #[no_mangle]
-pub extern fn find_nth_prime(n: i32) -> i32 {
-    return _find_nth_prime(n);
+pub extern fn find_nth_prime_i32(n: i32) -> i32 {
+    return _find_nth_prime_i32(n);
+}
+
+#[no_mangle]
+pub extern fn print_big_int(list: List_4) {
+    unsafe { println!("{:?}", *list.array) };
+
+//    let big_integer = BigInt::new(Sign::Plus, digits);
+
+//    println!("What an ENORMOUS integer: {}", big_integer);
 }

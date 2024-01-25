@@ -14,6 +14,13 @@ PATH_OBJ_TO_RUST_PACKAGES_DIR = Path(__file__).parent/"rust"
 MANIFEST_FILENAME = "Cargo.toml"
 LUCKY_INT = 17
 
+###########
+# CLASSES #
+###########
+
+class RUtilTypeMismatch(Exception):
+    """ A custom exception. """
+
 #############
 # FUNCTIONS #
 #############

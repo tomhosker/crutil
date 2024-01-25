@@ -10,3 +10,4 @@ crate-type = ["dylib"]
 
 [dependencies]
 primes = "0.3.0"
+num-bigint = "0.4.4"
