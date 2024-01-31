@@ -1,6 +1,10 @@
 /// This library defines some utility functions for working with primes.
 
+// Standard imports.
+use std::ffi::CString;
+
 // Non-standard imports.
+use libc::c_char;
 use num_bigint::{BigInt, Sign};
 use num_integer::Integer;
 use num_iter;
@@ -8,33 +12,17 @@ use primes;
 
 // Local constants.
 const MAX_DIGITS: usize = 100;
+const STANDARD_RADIX: u32 = 10;
+const TRUE_INT: i32 = 1;
+const FALSE_INT: i32 = 0;
 
 /***************************
  ** FOR INTERNAL USE ONLY **
  **************************/
 
-/// Find the nth prime number, provided that n is a 32-bit integer.
-fn _find_nth_prime_i32(n: i32) -> i32 {
-    let mut count = 1; // 2 being the first prime.
-    let mut current = 3; // 3 being the second prime.
-
-    while count < n {
-        if primes::is_prime(current) {
-            count += 1;
-        }
-
-        current += 2;
-    }
-
-    current -= 2;
-
-    return current as i32;
-}
-
 /// Determine whether an arbitrarily large integer is prime.
-fn _is_big_prime(potential_prime: BigInt) -> bool {
-    println!("potential_prime: {:?}", potential_prime);
-
+fn _is_prime_bigint(potential_prime: BigInt) -> bool {
+println!("Received: {:?}", potential_prime);
     if potential_prime == BigInt::from(2) {
         return true;
     }
@@ -44,8 +32,9 @@ fn _is_big_prime(potential_prime: BigInt) -> bool {
 
     let max_potential_divisor = potential_prime.sqrt();
 
-    for potential_divisor in num_iter::range_inclusive(BigInt::from(3), max_potential_divisor) {
-        //println!("potential_divisor: {:?}", potential_divisor);
+    for potential_divisor in num_iter::range_inclusive(
+        BigInt::from(3), max_potential_divisor
+    ) {
         if potential_prime.is_multiple_of(&potential_divisor) {
             return false;
         }
@@ -54,23 +43,31 @@ fn _is_big_prime(potential_prime: BigInt) -> bool {
     return true;
 }
 
-/// Find the nth prime number, for an arbitrarily large n.
-fn _find_nth_prime_bigint(n: BigInt) -> BigInt {
-    let mut count = BigInt::from(1); // 2 being the first prime.
-    let mut current = BigInt::from(3); // 3 being the second prime.
+// Middleman functions for the rest of this section...
 
-    while count < n {
-        println!("count: {:?}", count);
-        if _is_big_prime(current.clone()) {
-            count += 1;
-        }
+/// Receive a big integer from outside Rust.
+unsafe fn import_bigint(digit_list: PortableDigitList) -> BigInt {
+    let digits = Vec::from(*digit_list.array);
+    let result = BigInt::new(Sign::Plus, digits);
 
-        current += 2;
+    return result;
+}
+
+/// Convert a big integer into an exportable form outside Rust.
+fn export_bigint(n: BigInt) -> *mut c_char {
+    let result_str = n.to_str_radix(STANDARD_RADIX);
+    let result = CString::new(result_str).unwrap().into_raw();
+
+    return result;
+}
+
+/// Convert a boolean into an integer representation of the same.
+fn bool_to_int(boolean: bool) -> i32 {
+    if boolean {
+        return TRUE_INT;
     }
 
-    current -= 2;
-
-    return current;
+    return FALSE_INT;
 }
 
 /****************
@@ -90,34 +87,36 @@ pub extern fn make_contact(int: i32) {
     println!("This is the integer you gave me: {}", int);
 }
 
-/// A wrapper for the similarly-named function above.
+/// Receive a big integer from outside Rust, and send it back.
 #[no_mangle]
-pub extern fn find_nth_prime_i32(n: i32) -> i32 {
-    return _find_nth_prime_i32(n);
+pub unsafe extern fn echo_big_integer(
+    digit_list: PortableDigitList
+) -> *mut c_char {
+    let big_integer = import_bigint(digit_list);
+
+    println!("Received big integer: {:?}. Sending it back...", big_integer);
+
+    return export_bigint(big_integer);
+}
+
+/// Prevent a memory leak from sending a reference to a C string outside Rust.
+#[no_mangle]
+pub unsafe extern fn free_string(pointer: *mut c_char) {
+    let _ = CString::from_raw(pointer);
 }
 
 /// A wrapper for the similarly-named function above.
 #[no_mangle]
-pub unsafe extern fn find_nth_prime_bigint(
-    list: PortableDigitList
-) -> Vec<u32> {
-    let digits = Vec::from(*list.array);
-    println!("Digits: {:?}", digits.clone());
+pub extern fn is_prime_i32(n: i32) -> i32 {
+    return bool_to_int(primes::is_prime(n.try_into().unwrap()));
+}
+
+/// A wrapper for the similarly-named function above.
+#[no_mangle]
+pub unsafe extern fn is_prime_bigint(digit_list: PortableDigitList) -> i32 {
+    let digits = Vec::from(*digit_list.array);
+println!("{:?}", digits);
     let big_integer = BigInt::new(Sign::Plus, digits);
-    println!("Input big int: {:?}", big_integer.clone());
-    let result_bigint = _find_nth_prime_bigint(big_integer);
-    println!("Result big int: {:?}", result_bigint.clone());
-    let (_, result) = result_bigint.to_u32_digits();
-    println!{"{:?}", result};
-    return result;
-}
 
-#[no_mangle]
-pub unsafe extern fn print_big_int(list: PortableDigitList) {
-    unsafe {
-        let digits = Vec::from(*list.array);
-        let big_integer = BigInt::new(Sign::Plus, digits);
-
-        println!("What an ENORMOUS integer: {}", big_integer);
-    }
+    return bool_to_int(_is_prime_bigint(big_integer));
 }

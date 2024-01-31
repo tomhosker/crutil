@@ -13,12 +13,17 @@ from pathlib import Path
 PATH_OBJ_TO_RUST_PACKAGES_DIR = Path(__file__).parent/"rust"
 MANIFEST_FILENAME = "Cargo.toml"
 LUCKY_INT = 17
+TRUE_INT = 1
+FALSE_INT = 0
 
 ###########
 # CLASSES #
 ###########
 
 class RUtilTypeMismatch(Exception):
+    """ A custom exception. """
+
+class RUtilBadBooleanInteger(Exception):
     """ A custom exception. """
 
 #############
@@ -68,12 +73,19 @@ def get_local_rust_library(package_name):
         return None
     return result
 
-def make_contact_template(library_name):
+def make_contact_template(library):
     """ Prove that you can access the library in question. """
-    library = get_local_rust_library(library_name)
     try:
         library.make_contact(LUCKY_INT)
     except:
         traceback.print_exc()
         return False
     return True
+
+def int_to_bool(integer):
+    """ Convert an integer representation of a boolean into a boolean. """
+    if integer == TRUE_INT:
+        return True
+    if integer == FALSE_INT:
+        return False
+    raise RUtilBadBooleanInteger("Bad boolean integer: "+str(integer))
