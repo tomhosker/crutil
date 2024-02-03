@@ -2,11 +2,13 @@
 This code tests the functions defined in the primes module.
 """
 
-# Standard imports.
-from time import time
-
 # Source imports.
-from source.primes import make_contact, find_nth_prime
+from source.primes import (
+    make_contact,
+    is_prime_i32,
+    is_prime_bigint,
+    echo_big_integer
+)
 
 ###########
 # TESTING #
@@ -16,9 +18,16 @@ def test_make_contact():
     """ Test that this function runs, and that it returns True. """
     assert make_contact()
 
-def test_find_nth_prime():
-    """ Test that the function returns the correct answer - and rapidly. """
-    start_time = time()
-    assert find_nth_prime(10000) == 104729
-    execution_time = time()-start_time
-    assert execution_time < 0.1 # In seconds.
+def test_is_prime_i32():
+    """ Test the function on a couple of examples. """
+    assert is_prime_i32(188888881)
+    assert not is_prime_i32(188888882)
+
+def test_is_prime_bigint():
+    """ Test the function on a couple of examples. """
+    assert is_prime_bigint([2907251641, 1])
+    assert not is_prime_bigint([2907251642, 1])
+
+def test_echo_bigint():
+    """ Test the function return the correct value. """
+    assert echo_big_integer([0, 1]) == 2**32
