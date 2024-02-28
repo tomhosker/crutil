@@ -7,7 +7,7 @@ from setuptools import setup
 
 # Local constants.
 PACKAGE_NAME = "hosker_rutil"
-VERSION = "1.1.1"
+VERSION = "1.2.0"
 DESCRIPTION = "Rust utility functions"
 GIT_URL_STEM = "https://github.com/tomhosker"
 AUTHOR = "Tom Hosker"
