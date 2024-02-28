@@ -15,6 +15,7 @@ MANIFEST_FILENAME = "Cargo.toml"
 LUCKY_INT = 17
 TRUE_INT = 1
 FALSE_INT = 0
+BITS = 32
 
 ###########
 # CLASSES #
@@ -89,3 +90,23 @@ def int_to_bool(integer):
     if integer == FALSE_INT:
         return False
     raise RUtilBadBooleanInteger("Bad boolean integer: "+str(integer))
+
+def rusticate_int(integer: int) -> tuple[list[int], bool]:
+    """ Convert a Python integer into a form that Rust can use. """
+    is_non_negative = True
+    if integer < 0:
+        is_non_negative = False
+        integer = integer*-1
+    result = []
+    bin_string = format(integer, "b")
+    right_index = len(bin_string)
+    left_index = right_index-BITS
+    while left_index >= 0:
+        digit_bin_string = bin_string[left_index:right_index]
+        result.append(int(digit_bin_string, 2))
+        left_index -= BITS
+        right_index -= BITS
+    if right_index > 0:
+        digit_bin_string = bin_string[0:right_index]
+        result.append(int(digit_bin_string, 2))
+    return result, is_non_negative

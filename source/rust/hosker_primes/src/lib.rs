@@ -4,7 +4,7 @@
 use std::ffi::CString;
 
 // Non-standard imports.
-use libc::c_char;
+use libc::{c_char, c_void};
 use num_bigint::{BigInt, Sign};
 use num_integer::Integer;
 use num_iter;
@@ -43,7 +43,9 @@ println!("Received: {:?}", potential_prime);
     return true;
 }
 
-// Middleman functions for the rest of this section...
+/***************
+ ** MIDDLEMEN **
+ **************/
 
 /// Receive a big integer from outside Rust.
 unsafe fn import_bigint(digit_list: PortableDigitList) -> BigInt {
@@ -101,8 +103,8 @@ pub unsafe extern fn echo_big_integer(
 
 /// Prevent a memory leak from sending a reference to a C string outside Rust.
 #[no_mangle]
-pub unsafe extern fn free_string(pointer: *mut c_char) {
-    let _ = CString::from_raw(pointer);
+pub unsafe extern fn free_string(pointer: *mut c_void) {
+    let _ = CString::from_raw(pointer as *mut c_char);
 }
 
 /// A wrapper for the similarly-named function above.
@@ -115,7 +117,6 @@ pub extern fn is_prime_i32(n: i32) -> i32 {
 #[no_mangle]
 pub unsafe extern fn is_prime_bigint(digit_list: PortableDigitList) -> i32 {
     let digits = Vec::from(*digit_list.array);
-println!("{:?}", digits);
     let big_integer = BigInt::new(Sign::Plus, digits);
 
     return bool_to_int(_is_prime_bigint(big_integer));
