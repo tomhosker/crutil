@@ -5,4 +5,4 @@
 
 # Let's get cracking...
 pip install .
-hosker-rutil-install-specials
+hosker-rutil-compile-rust

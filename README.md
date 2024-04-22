@@ -4,6 +4,8 @@ This code defines a library of Rust functions, and a Python middleman from which
 
 ## Installation
 
+Note that this package is designed for Debian-based Linux platforms only. Some portions of it may well work on other platforms, but you do so at your own risk.
+
 ### Installing the Python Code
 
 * If you're installing remotely, **`pip install hosker-rutil`** should do the trick.
@@ -11,7 +13,7 @@ This code defines a library of Rust functions, and a Python middleman from which
 
 ### Compiling the Rust Library
 
-By installing the PIP package as described above, you will also have installed the command `hosker-rutil-install-specials`. Running this command will compile the Rust libraries from their source code, as well as installing Cargo, if you don't have it already.
+By installing the PIP package as described above, you will also have installed the commands `hosker-rutil-install-rust` and `hosker-rutil-compile-rust`. Run `hosker-rutil-install-rust` first - this installs Cargo, but even if you already have Cargo installed it shouldn't do any harm - then run `hosker-rutil-compile-rust` - this compiles the Rust code into binaries which your machine can execute. Running those two commands completes the installation process.
 
 ## Examples
 

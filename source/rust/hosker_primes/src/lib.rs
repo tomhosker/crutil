@@ -100,8 +100,7 @@ pub extern fn is_prime_i32(n: i32) -> i32 {
 /// A wrapper for the similarly-named function above.
 #[no_mangle]
 pub unsafe extern fn is_prime_bigint(digit_list: PortableDigitList) -> i32 {
-    let digits = Vec::from(*digit_list.array);
-    let big_integer = BigUint::new(digits);
+    let big_integer = import_bigint(digit_list);
 
     return bool_to_int(_is_prime_bigint(&big_integer));
 }

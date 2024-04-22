@@ -1,0 +1,20 @@
+#!/bin/python3
+
+"""
+This code defines a script which: compiles the necessary executables from Rust
+source code.
+"""
+
+# Custom imports.
+from hosker_rutil.rust_utils import compile_rust_packages
+
+##############
+# RUN SCRIPT #
+##############
+
+def run():
+    """ Run this file. """
+    return compile_rust_packages()
+
+if __name__ == "__main__":
+    run()
