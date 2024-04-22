@@ -3,6 +3,7 @@ This code interfaces with the "primes" Rust library.
 """
 
 # Standard imports.
+import math
 from ctypes import c_char_p, c_int32, c_void_p, cast
 
 # Local imports.

@@ -16,7 +16,7 @@ SCRIPT_PATHS = (
     "scripts/hosker-rutil-install-rust",
     "scripts/hosker-rutil-compile-rust"
 )
-INSTALL_REQUIRES = ("hosker_utils", "numpy")
+INSTALL_REQUIRES = ("hosker_utils", "numpy", "simpy")
 INCLUDE_PACKAGE_DATA = True
 
 ###################################
