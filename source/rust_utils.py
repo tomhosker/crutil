@@ -3,7 +3,6 @@ This code defines some functions for working with Rust directly.
 """
 
 # Standard imports.
-import shutil
 import subprocess
 import traceback
 import warnings
@@ -11,7 +10,6 @@ from ctypes import CDLL
 from pathlib import Path
 
 # Local constants.
-PATH_OBJ_TO_EXECUTABLES_DIR = Path.home()/".hosker_rutil_executables"
 PATH_OBJ_TO_RUST_PACKAGES_DIR = Path(__file__).parent/"rust"
 MANIFEST_FILENAME = "Cargo.toml"
 LUCKY_INT = 17
@@ -33,26 +31,8 @@ class RUtilBadBooleanInteger(Exception):
 # FUNCTIONS #
 #############
 
-def get_so_filename(package_name):
-    """ Get the executable filename for a given Rust package. """
-    result = "lib"+package_name+".so"
-    return result
-
-def get_path_to_executable(package_name):
-    """ Get the path to the .so file, the one adjacent to its source code, for
-    a given Rust package. """
-    so_filename = get_so_filename(package_name)
-    result = str(PATH_OBJ_TO_EXECUTABLES_DIR/so_filename)
-    return result
-
-def compile_rust_package(path_to_package):
+def compile_rust_package(path_to_manifest):
     """ Compile the Rust package for the given package. """
-    path_obj_to_package = Path(path_to_package)
-    path_to_manifest = str(path_obj_to_package/MANIFEST_FILENAME)
-    package_name = path_obj_to_package.stem
-    so_filename = get_so_filename(package_name)
-    path_to_so_src = str(path_obj_to_package/"target"/"release"/so_filename)
-    path_to_so_dst = get_path_to_executable(package_name)
     args = [
         "cargo",
         "build",
@@ -68,27 +48,28 @@ def compile_rust_package(path_to_package):
             path_to_manifest
         )
         return False
-    PATH_OBJ_TO_EXECUTABLES_DIR.mkdir(parents=True, exist_ok=True)
-    shutil.copyfile(path_to_so_src, path_to_so_dst)
     return True
 
 def compile_rust_packages():
     """ Create executables from the source code. """
     for path_obj in PATH_OBJ_TO_RUST_PACKAGES_DIR.glob("*"):
         if path_obj.is_dir():
-            if not compile_rust_package(path_obj):
+            path_to_manifest = str(path_obj/MANIFEST_FILENAME)
+            if not compile_rust_package(path_to_manifest):
                 return False
     return True
 
 def get_local_rust_library(package_name):
     """ Return a Rust library in a form which Python can use. """
-    path_to_executable = get_path_to_executable(package_name)
+    path_obj_to_package = PATH_OBJ_TO_RUST_PACKAGES_DIR/package_name
+    so_filename = "lib"+package_name+".so"
+    path_to_so_file = str(path_obj_to_package/"target"/"release"/so_filename)
     try:
-        result = CDLL(path_to_executable)
+        result = CDLL(path_to_so_file)
     except:
         warnings.warn(
             "There was a problem importing the Rust library with .so file: "+
-            path_to_executable
+            path_to_so_file
         )
         return None
     return result

@@ -8,8 +8,7 @@ from source.primes import (
     is_prime,
     is_prime_i32,
     is_prime_bigint,
-    echo_big_integer,
-    release_lib
+    echo_big_integer
 )
 
 ###########
