@@ -9,6 +9,7 @@ name = "hosker_primes"
 crate-type = ["cdylib"]
 
 [dependencies]
+is_prime = "2.0.9"
 libc = "0.2.152"
 num-bigint = "0.4.4"
 num-integer = "0.1.45"

@@ -4,11 +4,10 @@
 use std::ffi::CString;
 
 // Non-standard imports.
+use is_prime::is_prime as is_big_prime;
 use libc::{c_char, c_void};
-use num_bigint::{BigInt, Sign};
-use num_integer::Integer;
-use num_iter;
-use primes;
+use num_bigint::BigUint;
+use primes::is_prime as is_little_prime;
 
 // Local constants.
 const MAX_DIGITS: usize = 100;
@@ -21,26 +20,11 @@ const FALSE_INT: i32 = 0;
  **************************/
 
 /// Determine whether an arbitrarily large integer is prime.
-fn _is_prime_bigint(potential_prime: BigInt) -> bool {
-println!("Received: {:?}", potential_prime);
-    if potential_prime == BigInt::from(2) {
-        return true;
-    }
-    if potential_prime.is_even() {
-        return false;
-    }
+fn _is_prime_bigint(potential_prime: &BigUint) -> bool {
+    let string_rep = potential_prime.to_str_radix(STANDARD_RADIX);
+    let result = is_big_prime(&string_rep);
 
-    let max_potential_divisor = potential_prime.sqrt();
-
-    for potential_divisor in num_iter::range_inclusive(
-        BigInt::from(3), max_potential_divisor
-    ) {
-        if potential_prime.is_multiple_of(&potential_divisor) {
-            return false;
-        }
-    }
-
-    return true;
+    return result;
 }
 
 /***************
@@ -48,15 +32,15 @@ println!("Received: {:?}", potential_prime);
  **************/
 
 /// Receive a big integer from outside Rust.
-unsafe fn import_bigint(digit_list: PortableDigitList) -> BigInt {
+unsafe fn import_bigint(digit_list: PortableDigitList) -> BigUint {
     let digits = Vec::from(*digit_list.array);
-    let result = BigInt::new(Sign::Plus, digits);
+    let result = BigUint::new(digits);
 
     return result;
 }
 
 /// Convert a big integer into an exportable form outside Rust.
-fn export_bigint(n: BigInt) -> *mut c_char {
+fn export_bigint(n: BigUint) -> *mut c_char {
     let result_str = n.to_str_radix(STANDARD_RADIX);
     let result = CString::new(result_str).unwrap().into_raw();
 
@@ -110,14 +94,14 @@ pub unsafe extern fn free_string(pointer: *mut c_void) {
 /// A wrapper for the similarly-named function above.
 #[no_mangle]
 pub extern fn is_prime_i32(n: i32) -> i32 {
-    return bool_to_int(primes::is_prime(n.try_into().unwrap()));
+    return bool_to_int(is_little_prime(n.try_into().unwrap()));
 }
 
 /// A wrapper for the similarly-named function above.
 #[no_mangle]
 pub unsafe extern fn is_prime_bigint(digit_list: PortableDigitList) -> i32 {
     let digits = Vec::from(*digit_list.array);
-    let big_integer = BigInt::new(Sign::Plus, digits);
+    let big_integer = BigUint::new(digits);
 
-    return bool_to_int(_is_prime_bigint(big_integer));
+    return bool_to_int(_is_prime_bigint(&big_integer));
 }
