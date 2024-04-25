@@ -13,7 +13,7 @@ from hosker_utils import install_apt_package
 
 def run():
     """ Run this file. """
-    return install_apt_package("cargo"):
+    return install_apt_package("cargo")
 
 if __name__ == "__main__":
     run()
