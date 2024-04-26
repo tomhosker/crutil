@@ -4,25 +4,29 @@
 use std::ffi::CString;
 
 // Non-standard imports.
-use is_prime::is_prime as is_big_prime;
 use libc::{c_char, c_void};
-use num_bigint::BigUint;
-use primes::is_prime as is_little_prime;
+use num_bigint_dig::BigUint;
+use num_bigint_dig::prime::probably_prime as is_big_prime;
+use num_prime::nt_funcs::{
+    is_prime64 as is_little_prime,
+    nth_prime as _nth_prime
+};
 
 // Local constants.
 const MAX_DIGITS: usize = 100;
 const STANDARD_RADIX: u32 = 10;
+const PSEUDORANDOMLY_CHOSEN_BASES: usize = 32;
 const TRUE_INT: i32 = 1;
 const FALSE_INT: i32 = 0;
+const MAX_PRIME_ORDINAL_I32: i32 = 105097565;
 
 /***************************
  ** FOR INTERNAL USE ONLY **
  **************************/
 
 /// Determine whether an arbitrarily large integer is prime.
-fn _is_prime_bigint(potential_prime: &BigUint) -> bool {
-    let string_rep = potential_prime.to_str_radix(STANDARD_RADIX);
-    let result = is_big_prime(&string_rep);
+fn _is_prime_bigint(potential_prime: BigUint) -> bool {
+    let result = is_big_prime(&potential_prime, PSEUDORANDOMLY_CHOSEN_BASES);
 
     return result;
 }
@@ -102,5 +106,20 @@ pub extern fn is_prime_i32(n: i32) -> i32 {
 pub unsafe extern fn is_prime_bigint(digit_list: PortableDigitList) -> i32 {
     let big_integer = import_bigint(digit_list);
 
-    return bool_to_int(_is_prime_bigint(&big_integer));
+    return bool_to_int(_is_prime_bigint(big_integer));
+}
+
+/// A wrapper for the similarly-named function above.
+#[no_mangle]
+pub extern fn nth_prime_i32(n: i32) -> i32 {
+    if n > MAX_PRIME_ORDINAL_I32 {
+        println!(
+            "WARNING: Prime with ordinal {} cannot be represented in 32 bits.", 
+            n
+        );
+
+        return 0;
+    }
+
+    return _nth_prime(n.try_into().unwrap()) as i32;
 }

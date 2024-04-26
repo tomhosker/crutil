@@ -3,8 +3,11 @@ This code interfaces with the "primes" Rust library.
 """
 
 # Standard imports.
-import math
+import warnings
 from ctypes import c_char_p, c_int32, c_void_p, cast
+
+# Non-standard imports.
+import sympy
 
 # Local imports.
 from .rust_utils import (
@@ -18,6 +21,8 @@ from .rust_utils import (
 RUST_LIB = get_local_rust_library("hosker_primes")
 MAX_DIGITS = 100
 BIGINT_DIGIT_LIST_C_TYPE = c_int32*MAX_DIGITS
+MAX_I32 = (2**31)-1
+MAX_PRIME_ORDINAL_I32 = 105097565
 
 #############
 # FUNCTIONS #
@@ -36,12 +41,15 @@ def is_prime_i32(number: int) -> bool:
     result = int_to_bool(rust_result)
     return result
 
-def is_prime_bigint(bigint_digit_list: list[int]) -> bool:
+def is_prime_bigint_rust(number: int) -> bool:
     """
     Determine whether an arbitrarily large number is prime, where that
     arbitrarily large number is represented by a list of "digits", and where
     each of those "digits" represents a power of 2**32, rather than of 10.
+
+    IMPORTANT: This function is SLOWER than sympy.isprime(n).
     """
+    bigint_digit_list, _ = rusticate_int(number)
     c_array = BIGINT_DIGIT_LIST_C_TYPE(*bigint_digit_list)
     rust_func = RUST_LIB.is_prime_bigint
     rust_func.argtypes = [BIGINT_DIGIT_LIST_C_TYPE]
@@ -52,10 +60,9 @@ def is_prime_bigint(bigint_digit_list: list[int]) -> bool:
 
 def is_prime(number: int) -> bool:
     """ Combine the i32 and BigInt methods into one. """
-    rusticated, _ = rusticate_int(number)
-    if len(rusticated) == 1:
+    if number < MAX_I32:
         return is_prime_i32(number)
-    return is_prime_bigint(rusticated)
+    return sympy.isprime(number)
 
 def free_string(string_pointer: c_char_p):
     """ Calling this, after having called a Rust function which returns a
@@ -84,3 +91,25 @@ def echo_big_integer(big_integer: int) -> int:
     result = int(string_pointer.value.decode())
     free_string(string_pointer)
     return result
+
+def nth_prime_i32(ordinal: int) -> int:
+    """ Find the nth prime number, provided that it can be represented as in 32
+    bits. """
+    if ordinal > MAX_PRIME_ORDINAL_I32:
+        warnings.warn(
+            f"The prime with {ordinal} cannot be represented in 32 bits. "+
+            f"The largest prime representable in 32 bits is {MAX_I32}, with "+
+            f"ordinal {MAX_PRIME_ORDINAL_I32}."
+        )
+        return None
+    rust_func = RUST_LIB.nth_prime_i32
+    rust_func.argtypes = [c_int32]
+    rust_func.restype = c_int32
+    result = rust_func(ordinal)
+    return result
+
+def nth_prime(ordinal: int) -> int:
+    """ As above, but for an arbitrarily large ordinal. """
+    if ordinal < MAX_PRIME_ORDINAL_I32:
+        return nth_prime_i32(ordinal)
+    return sympy.ntheory.generate.prime(ordinal)
