@@ -14,14 +14,14 @@ from .rust_utils import (
     get_local_rust_library,
     make_contact_template,
     int_to_bool,
-    rusticate_int
+    rusticate_int,
+    MAX_I32
 )
 
 # Local constants.
 RUST_LIB = get_local_rust_library("hosker_primes")
 MAX_DIGITS = 100
 BIGINT_DIGIT_LIST_C_TYPE = c_int32*MAX_DIGITS
-MAX_I32 = (2**31)-1
 MAX_PRIME_ORDINAL_I32 = 105097565
 
 #############
