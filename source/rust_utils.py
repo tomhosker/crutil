@@ -16,6 +16,7 @@ LUCKY_INT = 17
 TRUE_INT = 1
 FALSE_INT = 0
 BITS = 32
+MAX_I32 = (2**31)-1
 
 ###########
 # CLASSES #
