@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Local constants.
-PACKAGE_NAME="crutil"
+PACKAGE_NAME="c_rust_utils"
 
 # Crash on the first error.
 set -e

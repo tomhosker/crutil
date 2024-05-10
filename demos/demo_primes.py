@@ -11,7 +11,7 @@ import sympy
 from sympy import isprime as python_isprime
 
 # Custom imports.
-from hosker_rutil.primes import (
+from crutil.primes import (
     is_prime as rutil_isprime,
     is_prime_bigint_rust as rust_isprime,
     nth_prime as rutil_nth_prime
