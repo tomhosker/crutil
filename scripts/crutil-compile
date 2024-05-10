@@ -2,11 +2,12 @@
 
 """
 This code defines a script which: compiles the necessary executables from Rust
-source code.
+and C source code.
 """
 
 # Custom imports.
-from hosker_rutil.rust_utils import compile_rust_packages
+from crutil.c_utils import compile_c_packages
+from crutil.rust_utils import compile_rust_packages
 
 ##############
 # RUN SCRIPT #
@@ -14,7 +15,8 @@ from hosker_rutil.rust_utils import compile_rust_packages
 
 def run():
     """ Run this file. """
-    return compile_rust_packages()
+    result = compile_c_packages() and compile_rust_packages()
+    return result
 
 if __name__ == "__main__":
     run()

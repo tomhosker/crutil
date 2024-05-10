@@ -6,16 +6,13 @@ This code defines the script required by setuptools.
 from setuptools import setup
 
 # Local constants.
-PACKAGE_NAME = "hosker_rutil"
-VERSION = "1.3.0"
-DESCRIPTION = "Rust utility functions"
+PACKAGE_NAME = "crutil"
+VERSION = "2.1.0"
+DESCRIPTION = "C and Rust utility functions"
 GIT_URL_STEM = "https://github.com/tomhosker"
 AUTHOR = "Tom Hosker"
 AUTHOR_EMAIL = "tomdothosker@gmail.com"
-SCRIPT_PATHS = (
-    "scripts/hosker-rutil-install-rust",
-    "scripts/hosker-rutil-compile-rust"
-)
+SCRIPT_PATHS = ("scripts/crutil-install", "scripts/crutil-compile")
 INSTALL_REQUIRES = ("hosker_utils", "sympy")
 INCLUDE_PACKAGE_DATA = True
 
