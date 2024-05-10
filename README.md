@@ -4,7 +4,7 @@ This code defines a library of C and Rust functions, and a Python middleman from
 
 ## Installation
 
-Note that this package is designed for Debian-based Linux platforms only. Some portions of it may well work on other platforms, but you do so at your own risk.
+Note that this package is designed for Debian-based Linux platforms only. Some portions of it may well work on other platforms, but you do so at your own risk. The instructions below assume that your system already has the GNU C Compiler, and that you have access to the `gcc` command.
 
 ### Installing the Python Code
 
