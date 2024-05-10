@@ -4,5 +4,6 @@ Python.
 """
 
 # Local imports.
-from .primes import is_prime, nth_prime
 from .collatz import count_collatz_steps, max_collatz_steps_under
+from .combinatorics import factorial
+from .primes import is_prime, nth_prime
