@@ -10,13 +10,8 @@ from ctypes import c_char_p, c_int32, c_void_p, cast
 import sympy
 
 # Local imports.
-from .rust_utils import (
-    get_local_rust_library,
-    make_contact_template,
-    int_to_bool,
-    rusticate_int,
-    MAX_I32
-)
+from .utils import make_contact_template, int_to_bool
+from .rust_utils import get_local_rust_library, rusticate_int, MAX_I32
 
 # Local constants.
 RUST_LIB = get_local_rust_library("hosker_primes")

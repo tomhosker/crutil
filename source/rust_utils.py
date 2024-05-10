@@ -4,7 +4,6 @@ This code defines some functions for working with Rust directly.
 
 # Standard imports.
 import subprocess
-import traceback
 import warnings
 from ctypes import CDLL
 from pathlib import Path
@@ -12,9 +11,6 @@ from pathlib import Path
 # Local constants.
 PATH_OBJ_TO_RUST_PACKAGES_DIR = Path(__file__).parent/"rust"
 MANIFEST_FILENAME = "Cargo.toml"
-LUCKY_INT = 17
-TRUE_INT = 1
-FALSE_INT = 0
 BITS = 32
 MAX_I32 = (2**31)-1
 
@@ -74,23 +70,6 @@ def get_local_rust_library(package_name):
         )
         return None
     return result
-
-def make_contact_template(library):
-    """ Prove that you can access the library in question. """
-    try:
-        library.make_contact(LUCKY_INT)
-    except:
-        traceback.print_exc()
-        return False
-    return True
-
-def int_to_bool(integer):
-    """ Convert an integer representation of a boolean into a boolean. """
-    if integer == TRUE_INT:
-        return True
-    if integer == FALSE_INT:
-        return False
-    raise RUtilBadBooleanInteger("Bad boolean integer: "+str(integer))
 
 def rusticate_int(integer: int) -> tuple[list[int], bool]:
     """ Convert a Python integer into a form that Rust can use. """

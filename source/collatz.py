@@ -6,11 +6,8 @@ This code interfaces with the "collatz" Rust library.
 from ctypes import c_int32
 
 # Local imports.
-from .rust_utils import (
-    get_local_rust_library,
-    make_contact_template,
-    MAX_I32
-)
+from .utils import make_contact_template
+from .rust_utils import get_local_rust_library, MAX_I32
 
 # Local constants.
 RUST_LIB = get_local_rust_library("hosker_collatz")
