@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Local constants.
-PACKAGE_NAME="hosker_rutil"
+PACKAGE_NAME="crutil"
 
 # Crash on the first error.
 set -e
