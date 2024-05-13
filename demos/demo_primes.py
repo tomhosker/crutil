@@ -12,9 +12,9 @@ from sympy import isprime as python_isprime
 
 # Custom imports.
 from crutil.primes import (
-    is_prime as rutil_isprime,
+    is_prime as crutil_isprime,
     is_prime_bigint_rust as rust_isprime,
-    nth_prime as rutil_nth_prime
+    nth_prime as crutil_nth_prime
 )
 
 # Local constants.
@@ -42,14 +42,14 @@ def demo_specific_is_prime(prime):
     click1 = time()
     assert rust_isprime(prime)
     click2 = time()
-    assert rutil_isprime(prime)
+    assert crutil_isprime(prime)
     click3 = time()
     python_time = click1-click0
     rust_time = click2-click1
-    rutil_time = click3-click2
+    crutil_time = click3-click2
     print(f"Python took {python_time} s to determine {prime} is prime;")
-    print(f"Rust took {rust_time} s to do the same;")
-    print(f"RUtil took {rutil_time} s.")
+    print(f"BigInt Rust took {rust_time} s to do the same;")
+    print(f"CRUtil took {crutil_time} s.")
 
 def demo_specific_is_composite(composite):
     """ Ronseal. """
@@ -58,14 +58,14 @@ def demo_specific_is_composite(composite):
     click1 = time()
     assert not rust_isprime(composite)
     click2 = time()
-    assert not rutil_isprime(composite)
+    assert not crutil_isprime(composite)
     click3 = time()
     python_time = click1-click0
     rust_time = click2-click1
-    rutil_time = click3-click2
+    crutil_time = click3-click2
     print(f"Python took {python_time} s to determine {composite} is composite;")
-    print(f"Rust took {rust_time} s to do the same;")
-    print(f"RUtil took {rutil_time} s.")
+    print(f"BigInt Rust took {rust_time} s to do the same;")
+    print(f"CRUtil took {crutil_time} s.")
 
 def demo_is_prime():
     """ Run this file. """
@@ -91,12 +91,12 @@ def demo_specific_nth_prime(ordinal, prime):
     click0 = time()
     assert python_nth_prime(ordinal) == prime
     click1 = time()
-    assert rutil_nth_prime(ordinal) == prime
+    assert crutil_nth_prime(ordinal) == prime
     click2 = time()
     python_time = click1-click0
-    rutil_time = click2-click1
+    crutil_time = click2-click1
     print(f"Python took {python_time} s to find prime with ordinal {ordinal};")
-    print(f"RUtil took {rutil_time} s to do the same.")
+    print(f"CRUtil took {crutil_time} s to do the same.")
 
 def demo_nth_prime():
     """ Ronseal. """
