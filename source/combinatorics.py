@@ -11,6 +11,7 @@ from .c_utils import get_local_c_library
 
 # Local constants.
 CLIB = get_local_c_library("combinatorics")
+BASE = 16
 
 #############
 # FUNCTIONS #
@@ -31,6 +32,6 @@ def factorial(num: int) -> int:
     cfunc = refine_ffunc(CLIB.factorial, [c_int32], c_void_p)
     raw_pointer = cfunc(num)
     string_pointer = cast(raw_pointer, c_char_p)
-    result = int(string_pointer.value.decode())
+    result = int(string_pointer.value.decode(), BASE)
     free_string(string_pointer)
     return result

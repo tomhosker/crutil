@@ -11,7 +11,7 @@ with large integers.
 #include <gmp.h>
 
 /* Local constants. */
-#define BASE 10
+#define BASE 16
 
 /***************************
  ** FOR INTERNAL USE ONLY **
