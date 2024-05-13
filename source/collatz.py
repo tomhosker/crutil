@@ -6,7 +6,7 @@ This code interfaces with the "collatz" Rust library.
 from ctypes import c_int32
 
 # Local imports.
-from .utils import make_contact_template
+from .utils import make_contact_template, refine_ffunc
 from .rust_utils import get_local_rust_library, MAX_I32
 
 # Local constants.
@@ -42,9 +42,7 @@ def count_collatz_steps(num: int) -> int:
     point. """
     if num > MAX_I32:
         return count_collatz_steps_large(num)
-    rust_func = RUST_LIB.count_collatz_steps
-    rust_func.argtypes = [c_int32]
-    rust_func.restype = c_int32
+    rust_func = refine_ffunc(RUST_LIB.count_collatz_steps, [c_int32], c_int32)
     result = rust_func(num)
     return result
 
@@ -66,8 +64,7 @@ def max_collatz_steps_under(limit: int) -> int:
     points. """
     if limit > MAX_I32:
         return max_collatz_steps_under_large(limit)
-    rust_func = RUST_LIB.max_collatz_steps_under
-    rust_func.argtypes = [c_int32]
-    rust_func.restype = c_int32
+    rust_func = \
+        refine_ffunc(RUST_LIB.max_collatz_steps_under, [c_int32], c_int32)
     result = rust_func(limit)
     return result
