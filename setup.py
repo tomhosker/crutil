@@ -7,7 +7,7 @@ from setuptools import setup
 
 # Local constants.
 PACKAGE_NAME = "crutil"
-VERSION = "2.1.1"
+VERSION = "2.1.2"
 DESCRIPTION = "C and Rust utility functions"
 GIT_URL_STEM = "https://github.com/tomhosker"
 AUTHOR = "Tom Hosker"

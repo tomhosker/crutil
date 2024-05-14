@@ -9,7 +9,7 @@ for using this package.
 from hosker_utils import install_apt_packages
 
 # Local constants.
-APT_PACKAGES_TO_INSTALL = ("cargo", "libgmp-dev")
+APT_PACKAGES_TO_INSTALL = ("cargo", "libgmp-dev", "valgrind")
 
 ##############
 # RUN SCRIPT #
