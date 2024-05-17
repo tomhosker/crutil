@@ -8,6 +8,9 @@ PATH_TO_HERE=$(dirname $0)
 LINTING_ARGS="-Wall -Wextra -Wfloat-equal -pedantic -ansi -O2"
 TEMP_FN="temp.out"
 
+# Crash on the first error.
+set -e
+
 # Let's get cracking...
 for lib in *; do
     path_to_main="$lib/main.c"

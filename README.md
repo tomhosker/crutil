@@ -8,7 +8,7 @@ Note that this package is designed for Debian-based Linux platforms only. Some p
 
 ### Installing the Python Code
 
-* ~~If you're installing remotely, **`pip install crutil`** should do the trick.~~
+* If you're installing remotely, **`pip install crutil`** should do the trick.
 * If, on the other hand, you're installing locally, then use **`pip install .`** from this directory.
 
 ### Compiling the C and Rust Libraries
